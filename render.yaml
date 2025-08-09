@@ -1,0 +1,28 @@
+services:
+  # PostgreSQL #
+  - type: psql
+    name: doccano-db
+    plan: free
+
+  # Doccano #
+  - type: web
+    name: doccano-app
+    env: docker
+    database:
+      name: doccano-db
+      property: connectionString
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: doccano-db
+          property: connectionString
+      - key: ADMIN_USERNAME
+        value: gslapf
+      - key: ADMIN_PASSWORD
+        generateValue: true # Render deve gerar a psswrd
+      - key: ADMIN_EMAIL
+        value: admin@example.com
+    initialDeployHook: |
+      doccano init
+      doccano createuser --username $ADMIN_USERNAME --password $ADMIN_PASSWORD --email $ADMIN_EMAIL --no-input
+    plan: free
