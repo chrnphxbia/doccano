@@ -1,6 +1,6 @@
 services:
   # PostgreSQL #
-  - type: psql
+  - type: postgres
     name: doccano-db
     plan: free
 
